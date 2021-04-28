@@ -1,0 +1,13 @@
+{
+  "manifest_version": 2,
+  "name": "VRChat Extension",
+  "version": "0.0.1",
+  "description": "Connect with your VRChat friends in your browser!",
+  "permissions": ["storage"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  }
+}
