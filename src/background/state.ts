@@ -5,7 +5,7 @@ import { Views } from '../common/enums/views';
 export default class State {
   public view: Views
   constructor() {
-    this.view = Views.LOADING
+    this.view = Views.LOGIN
   }
   public setView(view: Views): void {
     this.view = view

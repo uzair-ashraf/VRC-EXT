@@ -4,7 +4,7 @@ interface RingProps {
   color?: string;
   size?: number;
 }
-const Spinner: FC<RingProps> = ({ color = '#1fd1ed', size = 160 }) => {
+export const Spinner: FC<RingProps> = ({ color = '#1fd1ed', size = 160 }) => {
   const circles = [...Array(4)].map((_, index) => {
     return (
       <div
@@ -26,5 +26,3 @@ const Spinner: FC<RingProps> = ({ color = '#1fd1ed', size = 160 }) => {
     </div>
   )
 }
-
-export default Spinner

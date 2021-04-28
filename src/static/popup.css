@@ -1,10 +1,65 @@
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;300;400;500;600;700;800&display=swap');
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Dosis', Arial, Helvetica, sans-serif;
   color: #f8f9fa;
   margin: 0;
   height: 512px;
   width: 512px;
+}
+
+label {
+  display: block;
+  margin-bottom: .7rem;
+}
+
+input {
+  display: block;
+  width: 100%;
+  height: calc(2.25rem + 2px);
+  padding: .5rem .75rem;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.25;
+  color: #404c58;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(10, 10, 13, 0.15);
+  border-radius: .25rem;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+input:focus {
+  color: #404c58;
+  background-color: #fff;
+  border-color: #95e9f6;
+  outline: 0;
+  box-shadow: inset 0 1px 1px rgb(10 10 13 / 8%), 0 0 0 3px rgb(31 209 237 / 25%);
+}
+
+button {
+  display: inline-block;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: .5rem .75rem;
+  font-size: 1rem;
+  line-height: 1.25;
+  border-radius: .25rem;
+  transition: all 0.15s ease-in-out;
+  color: #1a2026;
+  background: #1fd1ed linear-gradient(180deg, #1eb6cf, #1fd1ed) repeat-x;
+  border-color: #1fd1ed;
+  cursor: pointer;
+}
+
+button:hover {
+  color: #fff;
+  background: #11bad5 linear-gradient( 180deg, #12a3ba, #11bad5) repeat-x;
+  border-color: #10b0c9;
 }
 
 .layout {
@@ -57,5 +112,49 @@ body {
   justify-content: center;
   align-items: center;
   font-size: 2rem;
+  text-align: center;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.login {
+  width: 100%;
+  height: 80%;
+  border-radius: 5px;
+  background-color: #404c58;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.login h3 {
+  font-size: 2.15rem;
+  margin: 1rem 0 0;
+}
+
+.login hr {
+  margin: 1rem 0 0;
+}
+
+.login form {
+  font-size: 1.5rem;
+  padding: .7rem;
+}
+
+.login form>div {
+  margin-top: .5rem;
+}
+
+.login form .button-container {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.login footer {
+  font-size: 1rem;
   text-align: center;
 }

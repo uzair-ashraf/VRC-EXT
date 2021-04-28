@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import Spinner from "./spinner";
+import { Spinner } from "../components";
 
 
 
