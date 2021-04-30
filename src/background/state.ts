@@ -4,8 +4,10 @@ import { Views } from '../common/enums/views';
 
 export default class State {
   public view: Views
+  public auth: string
   constructor() {
     this.view = Views.LOGIN
+    this.auth = null
   }
   public setView(view: Views): void {
     this.view = view
@@ -17,6 +19,14 @@ export default class State {
       if (chrome.runtime.lastError) reject(chrome.runtime.lastError)
       resolve()
     }))
+  }
+  public cleaned = (): DeserializedState => {
+    const state = Object.assign({}, this)
+    delete state.auth
+    return state
+  }
+  public hasLoggedIn = (): boolean => {
+    return !!this.auth
   }
   public static async Initialize(): Promise<State> {
     const data: {

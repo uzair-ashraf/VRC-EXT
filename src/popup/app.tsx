@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 
 import { Messages, Views } from '../common/enums'
 import { DeserializedState, Message } from '../common'
-import { Home, Layout, Loading, Login } from './views'
+import { Credentials, Home, Layout, Loading, Login } from './views'
 
 const App: FC = (): JSX.Element => {
   const [state, setState] = useState<DeserializedState>(new DeserializedState())
@@ -14,6 +14,9 @@ const App: FC = (): JSX.Element => {
         view
       ).send()
     )
+  }
+  const isLoggedIn = async (credentials: Credentials): Promise<boolean> => {
+    return await new Message(Messages.LOGIN, credentials).send()
   }
 
   useEffect((): void => {
@@ -39,7 +42,8 @@ const App: FC = (): JSX.Element => {
             ),
             [Views.LOGIN]: (): JSX.Element => (
               <Login
-
+                setView={setView}
+                isLoggedIn={isLoggedIn}
               />
             ),
           }[view]())

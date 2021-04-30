@@ -1,28 +1,51 @@
 import React, { FC, useState } from "react";
+import { Views } from "../../common/enums";
 
-export const Login: FC = (): JSX.Element => {
+export interface Credentials {
+  username: string;
+  password: string;
+}
 
-  interface LoginInfo {
-    username: string;
-    password: string;
-  }
-  const [loginInfo, setLoginInfo] = useState<LoginInfo>({
+interface LoginProps {
+  setView(view: Views): void;
+  isLoggedIn(credentials: Credentials): Promise<boolean>;
+}
+
+export const Login: FC<LoginProps> = (props): JSX.Element => {
+  const [credentials, setCredentials] = useState<Credentials>({
     username: null,
     password: null
   })
+  const [isLoading, setIsLoading ] = useState<boolean>(false)
 
 
   const onSubmit = (event: React.FormEvent): void => {
     event.preventDefault()
-    console.log(loginInfo)
+    const { username, password } = credentials
+    if (!username || !password ) return
+    setIsLoading(true)
+    props.isLoggedIn(credentials)
+          .then(isLoggedIn => {
+            console.log(isLoggedIn)
+            setIsLoading(false)
+            if(isLoggedIn) {
+              props.setView(Views.HOME)
+            } else {
+              console.log('error message')
+            }
+          })
+          .catch(err => {
+            setIsLoading(true)
+            console.error(err)
+          })
   }
   const onChange = ({ target }: React.ChangeEvent): void => {
     const { name, value } = target as HTMLInputElement
-    setLoginInfo({
-      ...loginInfo,
+    setCredentials({
+      ...credentials,
       [name]: value
     })
-    console.log(loginInfo)
+    console.log(credentials)
   }
   return (
     <div className="login-container">

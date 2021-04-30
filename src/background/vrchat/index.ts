@@ -1,51 +1,44 @@
 import fetch from 'node-fetch'
-import { AuthError } from './error-handling'
-import { World } from './world'
-import { User } from './user'
+import { VRCError, VRCErrorMessage } from './vrc-error'
+import { Config } from './interfaces';
 
 export class VRChat {
-  public world: World;
-  public user: User;
-  constructor() {
-    this.world = new World()
-    this.user = new User()
+  public apiKey: string
+  public auth: string
+  // public world: World;
+  // public user: User;
+  constructor(apiKey: string) {
+    this.apiKey = apiKey
+    this.auth = null
+    // this.world = new World()
+    // this.user = new User()
   }
-  public async getToken(username: string, password: string): Promise<any> {
-    try {
+  public login = async (username: string, password: string): Promise<boolean> => {
+      if (this.auth) return true
       if(!username || !password) {
         throw new TypeError('Username or Password must be provided')
       }
       const dataBuffer: Buffer = Buffer.from(`${username}:${password}`);
       const authorization: string = dataBuffer.toString('base64');
-      const response: any = await fetch('https://api.vrchat.cloud/api/1/auth/user', {
+      const response = await fetch('https://api.vrchat.cloud/api/1/auth/user', {
         headers: {
           Authorization: `Basic ${authorization}`
         }
       })
-      const data: object = await response.json()
-      if(response.status === 200) {
-        return authorization
-      } else {
-        throw new AuthError(response.status, data)
+      if (response.ok) {
+        this.auth = authorization
       }
-    } catch(err) {
-      console.error(err)
-      return err
-    }
+      console.log(await response.json())
+      return response.ok
   }
 
-  public async generateApiKey(): Promise<any> {
-    try {
-      const response: any = await fetch('https://api.vrchat.cloud/api/1/config')
-      const data: any = await response.json()
-      if (response.status === 200 && data.clientApiKey) {
-        return data.clientApiKey
-      } else {
-        throw new Error('Unexpected Error Occurred')
+  public static async Initialize(): Promise<VRChat> {
+      const response = await fetch('https://api.vrchat.cloud/api/1/config')
+      const data: unknown = await response.json()
+      if (response.ok) {
+        const { apiKey } = data as Config
+        return new this(apiKey)
       }
-    } catch(err) {
-      console.error(err)
-      return err
-    }
+      throw new VRCError(response.status, data as VRCErrorMessage)
   }
 }

@@ -1,35 +1,57 @@
 import State from './state'
 import { Messages, Views } from '../common/enums'
 import { Message } from '/common'
+import { VRChat } from './vrchat'
 
 class Background {
   private state: State
-  constructor(state: State) {
+  private vrchat: VRChat
+  constructor(state: State, vrchat: VRChat) {
     this.state = state
+    this.vrchat = vrchat
   }
   public addListeners(): void {
     chrome.runtime.onMessage.addListener(this.handleMessage.bind(this))
   }
   public async handleMessage({ action, payload }: Message, _: chrome.runtime.MessageSender, sendResponse: (response?: any) => void): Promise<void> {
-    const actions: {
-      [key: string]: () => Promise<void>
-    } = {
-      [Messages.SET_VIEW]: async () => {
-        const { view } = payload
-        this.state.view = view as Views
-        await this.state.save()
-        sendResponse(this.state)
-      },
-      [Messages.GET_STATE]: async () => {
-        sendResponse(this.state)
-      },
+    try {
+      const actions: {
+        [key: string]: () => Promise<void>
+      } = {
+        [Messages.SET_VIEW]: async () => {
+          const { view } = payload
+          this.state.view = view as Views
+          await this.state.save()
+          sendResponse(this.state.cleaned())
+        },
+        [Messages.GET_STATE]: async () => {
+          sendResponse(this.state.cleaned())
+        },
+        [Messages.LOGIN]: async () => {
+          const { username, password } = payload
+          if( !username || !password ) {
+            return sendResponse(false)
+          }
+          const hasLoggedIn = await this.vrchat.login(username, password)
+          if (hasLoggedIn) {
+            this.state.auth = this.vrchat.auth
+          }
+          sendResponse(hasLoggedIn)
+        },
+      }
+      await actions[action]()
+    } catch(err) {
+      console.error(err)
+      sendResponse(null)
     }
-    await actions[action]()
   }
   public static async Initialize(): Promise<void> {
     const state = await State.Initialize()
-
-    const background = new this(state)
+    const vrchat = await VRChat.Initialize()
+    if(state.auth) {
+      vrchat.auth = state.auth
+    }
+    const background = new this(state, vrchat)
     background.addListeners()
 
 

@@ -3,9 +3,14 @@
   "name": "VRChat Extension",
   "version": "0.0.1",
   "description": "Connect with your VRChat friends in your browser!",
-  "permissions": ["storage"],
+  "permissions": [
+    "storage",
+    "https://api.vrchat.cloud/*"
+  ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js"
+    ]
   },
   "browser_action": {
     "default_popup": "popup.html"
